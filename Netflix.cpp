@@ -8,6 +8,7 @@
 #include <limits>
 #include <memory>
 #include <sstream>
+using namespace std
 
 // Forward declarations
 class Content;
@@ -18,26 +19,26 @@ class Admin;
 class System;
 
 // Utility functions... could not do this by myself. Had to take help of Claude for this part
-std::string getCurrentDate() {
-    std::time_t now = std::time(nullptr);
-    std::tm* localTime = std::localtime(&now);
+string getCurrentDate() {
+    time_t now = time(nullptr);
+    tm* localTime = localtime(&now);
     
-    std::ostringstream oss;
-    oss << std::setfill('0') << std::setw(2) << localTime->tm_mday << "/"
-        << std::setfill('0') << std::setw(2) << (localTime->tm_mon + 1) << "/"
+    ostringstream oss;
+    oss << setfill('0') << setw(2) << localTime->tm_mday << "/"
+        << setfill('0') << setw(2) << (localTime->tm_mon + 1) << "/"
         << (localTime->tm_year + 1900);
     
     return oss.str();
 }
 
-std::string getFutureDate(int daysFromNow) {
-    std::time_t now = std::time(nullptr);
+string getFutureDate(int daysFromNow) {
+    time_t now = time(nullptr);
     now += daysFromNow * 24 * 60 * 60; // Add days in seconds
-    std::tm* futureTime = std::localtime(&now);
+    tm* futureTime = localtime(&now);
     
-    std::ostringstream oss;
-    oss << std::setfill('0') << std::setw(2) << futureTime->tm_mday << "/"
-        << std::setfill('0') << std::setw(2) << (futureTime->tm_mon + 1) << "/"
+    ostringstream oss;
+    oss << setfill('0') << setw(2) << futureTime->tm_mday << "/"
+        << setfill('0') << setw(2) << (futureTime->tm_mon + 1) << "/"
         << (futureTime->tm_year + 1900);
     
     return oss.str();
@@ -46,34 +47,34 @@ std::string getFutureDate(int daysFromNow) {
 //  Content class
 class Content {
 protected:
-    std::string title;
-    std::string genre;
+    string title;
+    string genre;
     double rating;
     bool is_rented;
     bool is_purchased;
-    std::string owner; // Username of the person who rented/purchased
-    std::string rent_date;
-    std::string return_date;
+    string owner; // Username of the person who rented/purchased
+    string rent_date;
+    string return_date;
 
 public:
-    Content(const std::string& title, const std::string& genre, double rating)
+    Content(const string& title, const string& genre, double rating)
         : title(title), genre(genre), rating(rating), is_rented(false), 
           is_purchased(false), owner(""), rent_date(""), return_date("") {}
     
     virtual ~Content() {}
     
     // Getters
-    std::string getTitle() const { return title; }
-    std::string getGenre() const { return genre; }
+    string getTitle() const { return title; }
+    string getGenre() const { return genre; }
     double getRating() const { return rating; }
     bool isRented() const { return is_rented; }
     bool isPurchased() const { return is_purchased; }
-    std::string getOwner() const { return owner; }
-    std::string getRentDate() const { return rent_date; }
-    std::string getReturnDate() const { return return_date; }
+    string getOwner() const { return owner; }
+    string getRentDate() const { return rent_date; }
+    string getReturnDate() const { return return_date; }
     
     // Rent/Purchase methods
-    virtual bool rent(const std::string& username) {
+    virtual bool rent(const string& username) {
         if (is_rented || is_purchased) {
             return false;
         }
@@ -84,7 +85,7 @@ public:
         return true;
     }
     
-    virtual bool purchase(const std::string& username) {
+    virtual bool purchase(const string& username) {
         if (is_purchased) {
             return false;
         }
@@ -110,7 +111,7 @@ public:
         return true;
     }
     
-    virtual std::string getType() const = 0;
+    virtual string getType() const = 0;
     virtual double getRentCost() const = 0;
     virtual double getPurchaseCost() const = 0;
     virtual void display() const = 0;
@@ -124,30 +125,30 @@ private:
     double purchase_cost;
 
 public:
-    Movie(const std::string& title, const std::string& genre, double rating, 
+    Movie(const string& title, const string& genre, double rating, 
          int duration, double rent_cost, double purchase_cost)
         : Content(title, genre, rating), duration(duration), 
           rent_cost(rent_cost), purchase_cost(purchase_cost) {}
     
-    std::string getType() const override { return "Movie"; }
+    string getType() const override { return "Movie"; }
     double getRentCost() const override { return rent_cost; }
     double getPurchaseCost() const override { return purchase_cost; }
     int getDuration() const { return duration; }
     
     void display() const override {
-        std::cout << "Movie: " << title << std::endl;
-        std::cout << "Genre: " << genre << std::endl;
-        std::cout << "Rating: " << rating << "/10" << std::endl;
-        std::cout << "Duration: " << duration << " minutes" << std::endl;
-        std::cout << "Rent Cost: $" << rent_cost << std::endl;
-        std::cout << "Purchase Cost: $" << purchase_cost << std::endl;
-        std::cout << "Status: " << (is_purchased ? "Purchased" : (is_rented ? "Rented" : "Available")) << std::endl;
+        cout << "Movie: " << title << endl;
+        cout << "Genre: " << genre << endl;
+        cout << "Rating: " << rating << "/10" << endl;
+        cout << "Duration: " << duration << " minutes" << endl;
+        cout << "Rent Cost: $" << rent_cost << endl;
+        cout << "Purchase Cost: $" << purchase_cost << endl;
+        cout << "Status: " << (is_purchased ? "Purchased" : (is_rented ? "Rented" : "Available")) << endl;
         if (is_rented) {
-            std::cout << "Rented by: " << owner << std::endl;
-            std::cout << "Rent Date: " << rent_date << std::endl;
-            std::cout << "Return Date: " << return_date << std::endl;
+            cout << "Rented by: " << owner << endl;
+            cout << "Rent Date: " << rent_date << endl;
+            cout << "Return Date: " << return_date << endl;
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 };
 
@@ -160,7 +161,7 @@ private:
     double season_purchase_cost;
 
 public:
-    TVShow(const std::string& title, const std::string& genre, double rating,
+    TVShow(const string& title, const string& genre, double rating,
           int seasons, int episodes_per_season, 
           double season_rent_cost, double season_purchase_cost)
         : Content(title, genre, rating), seasons(seasons),
@@ -168,7 +169,7 @@ public:
           season_rent_cost(season_rent_cost),
           season_purchase_cost(season_purchase_cost) {}
     
-    std::string getType() const override { return "TV Show"; }
+    string getType() const override { return "TV Show"; }
     double getRentCost() const override { return season_rent_cost * seasons; }
     double getPurchaseCost() const override { return season_purchase_cost * seasons; }
     int getSeasons() const { return seasons; }
@@ -177,44 +178,44 @@ public:
     double getSeasonPurchaseCost() const { return season_purchase_cost; }
     
     void display() const override {
-        std::cout << "TV Show: " << title << std::endl;
-        std::cout << "Genre: " << genre << std::endl;
-        std::cout << "Rating: " << rating << "/10" << std::endl;
-        std::cout << "Seasons: " << seasons << std::endl;
-        std::cout << "Episodes per Season: " << episodes_per_season << std::endl;
-        std::cout << "Rent Cost per Season: $" << season_rent_cost << std::endl;
-        std::cout << "Total Rent Cost: $" << getRentCost() << std::endl;
-        std::cout << "Purchase Cost per Season: $" << season_purchase_cost << std::endl;
-        std::cout << "Total Purchase Cost: $" << getPurchaseCost() << std::endl;
-        std::cout << "Status: " << (is_purchased ? "Purchased" : (is_rented ? "Rented" : "Available")) << std::endl;
+        cout << "TV Show: " << title << endl;
+        cout << "Genre: " << genre << endl;
+        cout << "Rating: " << rating << "/10" << endl;
+        cout << "Seasons: " << seasons << endl;
+        cout << "Episodes per Season: " << episodes_per_season << endl;
+        cout << "Rent Cost per Season: $" << season_rent_cost << endl;
+        cout << "Total Rent Cost: $" << getRentCost() << endl;
+        cout << "Purchase Cost per Season: $" << season_purchase_cost << endl;
+        cout << "Total Purchase Cost: $" << getPurchaseCost() << endl;
+        cout << "Status: " << (is_purchased ? "Purchased" : (is_rented ? "Rented" : "Available")) << endl;
         if (is_rented) {
-            std::cout << "Rented by: " << owner << std::endl;
-            std::cout << "Rent Date: " << rent_date << std::endl;
-            std::cout << "Return Date: " << return_date << std::endl;
+            cout << "Rented by: " << owner << endl;
+            cout << "Rent Date: " << rent_date << endl;
+            cout << "Return Date: " << return_date << endl;
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 };
 
 // User class
 class User {
 protected:
-    std::string username;
-    std::string password;
-    std::vector<std::shared_ptr<Content>> rented_content;
-    std::vector<std::shared_ptr<Content>> purchased_content;
+    string username;
+    string password;
+    vector<shared_ptr<Content>> rented_content;
+    vector<shared_ptr<Content>> purchased_content;
     double charges_due;
 
 public:
-    User(const std::string& username, const std::string& password)
+    User(const string& username, const string& password)
         : username(username), password(password), charges_due(0.0) {}
     
     virtual ~User() {}
     
-    std::string getUsername() const { return username; }
+    string getUsername() const { return username; }
     double getChargesDue() const { return charges_due; }
     
-    bool validatePassword(const std::string& input_password) const {
+    bool validatePassword(const string& input_password) const {
         return password == input_password;
     }
     
@@ -222,7 +223,7 @@ public:
         return !rented_content.empty();
     }
     
-    bool rentContent(std::shared_ptr<Content> content) {
+    bool rentContent(shared_ptr<Content> content) {
         if (content->rent(username)) {
             rented_content.push_back(content);
             charges_due += content->getRentCost();
@@ -231,10 +232,10 @@ public:
         return false;
     }
     
-    bool purchaseContent(std::shared_ptr<Content> content) {
+    bool purchaseContent(shared_ptr<Content> content) {
         if (content->purchase(username)) {
             // If previously rented, remove from rented list
-            auto it = std::find(rented_content.begin(), rented_content.end(), content);
+            auto it = find(rented_content.begin(), rented_content.end(), content);
             if (it != rented_content.end()) {
                 rented_content.erase(it);
             }
@@ -246,8 +247,8 @@ public:
         return false;
     }
     
-    bool returnContent(std::shared_ptr<Content> content) {
-        auto it = std::find(rented_content.begin(), rented_content.end(), content);
+    bool returnContent(shared_ptr<Content> content) {
+        auto it = find(rented_content.begin(), rented_content.end(), content);
         if (it != rented_content.end() && content->returnContent()) {
             rented_content.erase(it);
             return true;
@@ -257,106 +258,106 @@ public:
     
     void displayRentedContent() const {
         if (rented_content.empty()) {
-            std::cout << "You haven't rented any content yet." << std::endl;
+            cout << "You haven't rented any content yet." << endl;
             return;
         }
         
-        std::cout << "---- Your Rented Content ----" << std::endl;
+        cout << "---- Your Rented Content ----" << endl;
         for (const auto& content : rented_content) {
-            std::cout << "Title: " << content->getTitle() << std::endl;
-            std::cout << "Type: " << content->getType() << std::endl;
-            std::cout << "Rented on: " << content->getRentDate() << std::endl;
-            std::cout << "Return by: " << content->getReturnDate() << std::endl;
-            std::cout << "Cost: $" << content->getRentCost() << std::endl;
-            std::cout << std::endl;
+            cout << "Title: " << content->getTitle() << endl;
+            cout << "Type: " << content->getType() << endl;
+            cout << "Rented on: " << content->getRentDate() << endl;
+            cout << "Return by: " << content->getReturnDate() << endl;
+            cout << "Cost: $" << content->getRentCost() << endl;
+            cout << endl;
         }
     }
     
     void displayPurchasedContent() const {
         if (purchased_content.empty()) {
-            std::cout << "You haven't purchased any content yet." << std::endl;
+            cout << "You haven't purchased any content yet." << endl;
             return;
         }
         
-        std::cout << "---- Your Purchased Content ----" << std::endl;
+        cout << "---- Your Purchased Content ----" << endl;
         for (const auto& content : purchased_content) {
-            std::cout << "Title: " << content->getTitle() << std::endl;
-            std::cout << "Type: " << content->getType() << std::endl;
-            std::cout << "Cost: $" << content->getPurchaseCost() << std::endl;
-            std::cout << std::endl;
+            cout << "Title: " << content->getTitle() << endl;
+            cout << "Type: " << content->getType() << endl;
+            cout << "Cost: $" << content->getPurchaseCost() << endl;
+            cout << endl;
         }
     }
     
     void displayChargesDue() const {
-        std::cout << "Total charges due: $" << charges_due << std::endl;
+        cout << "Total charges due: $" << charges_due << endl;
     }
     
     virtual void displayMenu() const {
-        std::cout << "\n----- User Menu -----" << std::endl;
-        std::cout << "1. Browse content by category" << std::endl;
-        std::cout << "2. Browse content by genre" << std::endl;
-        std::cout << "3. Search content by title" << std::endl;
-        std::cout << "4. Search content by genre" << std::endl;
-        std::cout << "5. Rent content" << std::endl;
-        std::cout << "6. Purchase content" << std::endl;
-        std::cout << "7. Return rented content" << std::endl;
-        std::cout << "8. View rented content" << std::endl;
-        std::cout << "9. View purchased content" << std::endl;
-        std::cout << "10. Check charges due" << std::endl;
-        std::cout << "0. Logout" << std::endl;
-        std::cout << "Enter your choice: ";
+        cout << "\n----- User Menu -----" << endl;
+        cout << "1. Browse content by category" << endl;
+        cout << "2. Browse content by genre" << endl;
+        cout << "3. Search content by title" << endl;
+        cout << "4. Search content by genre" << endl;
+        cout << "5. Rent content" << endl;
+        cout << "6. Purchase content" << endl;
+        cout << "7. Return rented content" << endl;
+        cout << "8. View rented content" << endl;
+        cout << "9. View purchased content" << endl;
+        cout << "10. Check charges due" << endl;
+        cout << "0. Logout" << endl;
+        cout << "Enter your choice: ";
     }
 };
 
 // Admin class
 class Admin : public User {
 public:
-    Admin(const std::string& username, const std::string& password)
+    Admin(const string& username, const string& password)
         : User(username, password) {}
     
     void displayMenu() const override {
-        std::cout << "\n----- Admin Menu -----" << std::endl;
-        std::cout << "1. Add new movie" << std::endl;
-        std::cout << "2. Add new TV show" << std::endl;
-        std::cout << "3. Remove content" << std::endl;
-        std::cout << "4. Check charges due for user" << std::endl;
-        std::cout << "5. Browse all content" << std::endl;
-        std::cout << "6. Search content" << std::endl;
-        std::cout << "0. Logout" << std::endl;
-        std::cout << "Enter your choice: ";
+        cout << "\n----- Admin Menu -----" << endl;
+        cout << "1. Add new movie" << endl;
+        cout << "2. Add new TV show" << endl;
+        cout << "3. Remove content" << endl;
+        cout << "4. Check charges due for user" << endl;
+        cout << "5. Browse all content" << endl;
+        cout << "6. Search content" << endl;
+        cout << "0. Logout" << endl;
+        cout << "Enter your choice: ";
     }
 };
 
 // Netflix-like system
 class System {
 private:
-    std::vector<std::shared_ptr<Content>> content_database;
-    std::map<std::string, std::shared_ptr<User>> users;
-    std::shared_ptr<User> current_user;
+    vector<shared_ptr<Content>> content_database;
+    map<string, shared_ptr<User>> users;
+    shared_ptr<User> current_user;
     
     // Initialize with sample data
     void initializeDatabase() {
         // Add 10 sample movies
-        addContent(std::make_shared<Movie>("The Shawshank Redemption", "Drama", 9.3, 142, 3.99, 14.99));
-        addContent(std::make_shared<Movie>("The Godfather", "Crime", 9.2, 175, 3.99, 14.99));
-        addContent(std::make_shared<Movie>("The Dark Knight", "Action", 9.0, 152, 4.99, 15.99));
-        addContent(std::make_shared<Movie>("Pulp Fiction", "Crime", 8.9, 154, 3.99, 12.99));
-        addContent(std::make_shared<Movie>("Fight Club", "Drama", 8.8, 139, 3.99, 12.99));
-        addContent(std::make_shared<Movie>("Inception", "Sci-Fi", 8.8, 148, 4.99, 15.99));
-        addContent(std::make_shared<Movie>("The Matrix", "Sci-Fi", 8.7, 136, 3.99, 13.99));
-        addContent(std::make_shared<Movie>("Interstellar", "Sci-Fi", 8.6, 169, 4.99, 16.99));
-        addContent(std::make_shared<Movie>("Parasite", "Thriller", 8.5, 132, 4.99, 16.99));
-        addContent(std::make_shared<Movie>("Joker", "Drama", 8.4, 122, 4.99, 15.99));
+        addContent(make_shared<Movie>("The Shawshank Redemption", "Drama", 9.3, 142, 3.99, 14.99));
+        addContent(make_shared<Movie>("The Godfather", "Crime", 9.2, 175, 3.99, 14.99));
+        addContent(make_shared<Movie>("The Dark Knight", "Action", 9.0, 152, 4.99, 15.99));
+        addContent(make_shared<Movie>("Pulp Fiction", "Crime", 8.9, 154, 3.99, 12.99));
+        addContent(make_shared<Movie>("Fight Club", "Drama", 8.8, 139, 3.99, 12.99));
+        addContent(make_shared<Movie>("Inception", "Sci-Fi", 8.8, 148, 4.99, 15.99));
+        addContent(make_shared<Movie>("The Matrix", "Sci-Fi", 8.7, 136, 3.99, 13.99));
+        addContent(make_shared<Movie>("Interstellar", "Sci-Fi", 8.6, 169, 4.99, 16.99));
+        addContent(make_shared<Movie>("Parasite", "Thriller", 8.5, 132, 4.99, 16.99));
+        addContent(make_shared<Movie>("Joker", "Drama", 8.4, 122, 4.99, 15.99));
         
         // Add some sample TV shows
-        addContent(std::make_shared<TVShow>("Breaking Bad", "Drama", 9.5, 5, 13, 2.99, 9.99));
-        addContent(std::make_shared<TVShow>("Game of Thrones", "Fantasy", 9.2, 8, 10, 2.99, 12.99));
-        addContent(std::make_shared<TVShow>("Stranger Things", "Sci-Fi", 8.7, 4, 8, 2.99, 9.99));
-        addContent(std::make_shared<TVShow>("The Office", "Comedy", 8.9, 9, 24, 1.99, 7.99));
-        addContent(std::make_shared<TVShow>("Friends", "Comedy", 8.5, 10, 24, 1.99, 8.99));
+        addContent(make_shared<TVShow>("Breaking Bad", "Drama", 9.5, 5, 13, 2.99, 9.99));
+        addContent(make_shared<TVShow>("Game of Thrones", "Fantasy", 9.2, 8, 10, 2.99, 12.99));
+        addContent(make_shared<TVShow>("Stranger Things", "Sci-Fi", 8.7, 4, 8, 2.99, 9.99));
+        addContent(make_shared<TVShow>("The Office", "Comedy", 8.9, 9, 24, 1.99, 7.99));
+        addContent(make_shared<TVShow>("Friends", "Comedy", 8.5, 10, 24, 1.99, 8.99));
         
         // Add admin account
-        users["admin"] = std::make_shared<Admin>("admin", "admin123");
+        users["admin"] = make_shared<Admin>("admin", "admin123");
     }
     
 public:
@@ -364,13 +365,13 @@ public:
         initializeDatabase();
     }
     
-    void addContent(std::shared_ptr<Content> content) {
+    void addContent(shared_ptr<Content> content) {
         content_database.push_back(content);
     }
     
-    bool removeContent(const std::string& title) {
-        auto it = std::find_if(content_database.begin(), content_database.end(),
-                              [&title](const std::shared_ptr<Content>& c) {
+    bool removeContent(const string& title) {
+        auto it = find_if(content_database.begin(), content_database.end(),
+                              [&title](const shared_ptr<Content>& c) {
                                   return c->getTitle() == title;
                               });
         
@@ -381,9 +382,9 @@ public:
         return false;
     }
     
-    std::shared_ptr<Content> findContentByTitle(const std::string& title) {
-        auto it = std::find_if(content_database.begin(), content_database.end(),
-                              [&title](const std::shared_ptr<Content>& c) {
+    shared_ptr<Content> findContentByTitle(const string& title) {
+        auto it = find_if(content_database.begin(), content_database.end(),
+                              [&title](const shared_ptr<Content>& c) {
                                   return c->getTitle() == title;
                               });
         
@@ -393,8 +394,8 @@ public:
         return nullptr;
     }
     
-    std::vector<std::shared_ptr<Content>> findContentByGenre(const std::string& genre) {
-        std::vector<std::shared_ptr<Content>> results;
+    vector<shared_ptr<Content>> findContentByGenre(const string& genre) {
+        vector<shared_ptr<Content>> results;
         
         for (const auto& content : content_database) {
             if (content->getGenre() == genre) {
@@ -405,8 +406,8 @@ public:
         return results;
     }
     
-    std::vector<std::shared_ptr<Content>> getContentByType(const std::string& type) {
-        std::vector<std::shared_ptr<Content>> results;
+    vector<shared_ptr<Content>> getContentByType(const string& type) {
+        vector<shared_ptr<Content>> results;
         
         for (const auto& content : content_database) {
             if (content->getType() == type) {
@@ -417,11 +418,11 @@ public:
         return results;
     }
     
-    std::vector<std::string> getUniqueGenres() {
-        std::vector<std::string> genres;
+    vector<string> getUniqueGenres() {
+        vector<string> genres;
         
         for (const auto& content : content_database) {
-            if (std::find(genres.begin(), genres.end(), content->getGenre()) == genres.end()) {
+            if (find(genres.begin(), genres.end(), content->getGenre()) == genres.end()) {
                 genres.push_back(content->getGenre());
             }
         }
@@ -429,20 +430,20 @@ public:
         return genres;
     }
     
-    bool isUsernameAvailable(const std::string& username) {
+    bool isUsernameAvailable(const string& username) {
         return users.find(username) == users.end();
     }
     
-    bool registerUser(const std::string& username, const std::string& password) {
+    bool registerUser(const string& username, const string& password) {
         if (!isUsernameAvailable(username)) {
             return false;
         }
         
-        users[username] = std::make_shared<User>(username, password);
+        users[username] = make_shared<User>(username, password);
         return true;
     }
     
-    bool login(const std::string& username, const std::string& password) {
+    bool login(const string& username, const string& password) {
         auto it = users.find(username);
         if (it != users.end() && it->second->validatePassword(password)) {
             current_user = it->second;
@@ -463,11 +464,11 @@ public:
         return current_user != nullptr;
     }
     
-    std::shared_ptr<User> getCurrentUser() const {
+    shared_ptr<User> getCurrentUser() const {
         return current_user;
     }
     
-    std::shared_ptr<User> getUserByUsername(const std::string& username) {
+    shared_ptr<User> getUserByUsername(const string& username) {
         auto it = users.find(username);
         if (it != users.end()) {
             return it->second;
@@ -476,15 +477,15 @@ public:
     }
     
     void displayAllContent() const {
-        std::cout << "----- Content Database -----" << std::endl;
+        cout << "----- Content Database -----" << endl;
         int index = 1;
         for (const auto& content : content_database) {
-            std::cout << index++ << ". " << content->getTitle() 
+            cout << index++ << ". " << content->getTitle() 
                      << " (" << content->getType() << ", " << content->getGenre() << ")" 
                      << " - " << (content->isRented() || content->isPurchased() ? "Not Available" : "Available")
-                     << std::endl;
+                     << endl;
         }
-        std::cout << std::endl;
+        cout << endl;
     }
     
     void run() {
@@ -493,8 +494,8 @@ public:
         while (true) {
             if (!isUserLoggedIn()) {
                 displayMainMenu();
-                std::cin >> choice;
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                cin >> choice;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 
                 switch (choice) {
                     case 1:
@@ -507,15 +508,15 @@ public:
                         handleAdminLogin();
                         break;
                     case 0:
-                        std::cout << "Thank you for using Netflix-Style Inventory System. Goodbye!" << std::endl;
+                        cout << "Thank you for using Netflix-Style Inventory System. Goodbye!" << endl;
                         return;
                     default:
-                        std::cout << "Invalid choice. Please try again." << std::endl;
+                        cout << "Invalid choice. Please try again." << endl;
                 }
             } else if (isAdminLoggedIn()) {
                 current_user->displayMenu();
-                std::cin >> choice;
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                cin >> choice;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 
                 switch (choice) {
                     case 1:
@@ -538,15 +539,15 @@ public:
                         break;
                     case 0:
                         logout();
-                        std::cout << "Logged out successfully." << std::endl;
+                        cout << "Logged out successfully." << endl;
                         break;
                     default:
-                        std::cout << "Invalid choice. Please try again." << std::endl;
+                        cout << "Invalid choice. Please try again." << endl;
                 }
             } else {
                 current_user->displayMenu();
-                std::cin >> choice;
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                cin >> choice;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 
                 switch (choice) {
                     case 1:
@@ -581,11 +582,11 @@ public:
                         break;
                     case 0:
                         logout();
-                        std::cout
-                        << "Logged out successfully." << std::endl;
+                        cout
+                        << "Logged out successfully." << endl;
                         break;
                     default:
-                        std::cout << "Invalid choice. Please try again." << std::endl;
+                        cout << "Invalid choice. Please try again." << endl;
                 }
             }
         }
@@ -593,77 +594,77 @@ public:
     
 private:
     void displayMainMenu() const {
-        std::cout << "\n----- Netflix-Style Inventory System -----" << std::endl;
-        std::cout << "1. User Login" << std::endl;
-        std::cout << "2. User Sign Up" << std::endl;
-        std::cout << "3. Admin Login" << std::endl;
-        std::cout << "0. Exit" << std::endl;
-        std::cout << "Enter your choice: ";
+        cout << "\n----- Netflix-Style Inventory System -----" << endl;
+        cout << "1. User Login" << endl;
+        cout << "2. User Sign Up" << endl;
+        cout << "3. Admin Login" << endl;
+        cout << "0. Exit" << endl;
+        cout << "Enter your choice: ";
     }
     
     void handleLogin() {
-        std::string username, password;
+        string username, password;
         
-        std::cout << "Enter username: ";
-        std::getline(std::cin, username);
-        std::cout << "Enter password: ";
-        std::getline(std::cin, password);
+        cout << "Enter username: ";
+        getline(cin, username);
+        cout << "Enter password: ";
+        getline(cin, password);
         
         if (login(username, password)) {
-            std::cout << "Login successful. Welcome, " << username << "!" << std::endl;
+            cout << "Login successful. Welcome, " << username << "!" << endl;
         } else {
-            std::cout << "Login failed. Invalid username or password." << std::endl;
+            cout << "Login failed. Invalid username or password." << endl;
         }
     }
     
     void handleSignUp() {
-        std::string username, password;
+        string username, password;
         
-        std::cout << "Enter new username: ";
-        std::getline(std::cin, username);
+        cout << "Enter new username: ";
+        getline(cin, username);
         
         if (!isUsernameAvailable(username)) {
-            std::cout << "Username already taken. Please choose another one." << std::endl;
+            cout << "Username already taken. Please choose another one." << endl;
             return;
         }
         
-        std::cout << "Enter password: ";
-        std::getline(std::cin, password);
+        cout << "Enter password: ";
+        getline(cin, password);
         
         if (registerUser(username, password)) {
-            std::cout << "Registration successful! You can now login." << std::endl;
+            cout << "Registration successful! You can now login." << endl;
         } else {
-            std::cout << "Registration failed. Please try again." << std::endl;
+            cout << "Registration failed. Please try again." << endl;
         }
     }
     
     void handleAdminLogin() {
-        std::string username, password;
+        string username, password;
         
-        std::cout << "Enter admin username: ";
-        std::getline(std::cin, username);
-        std::cout << "Enter admin password: ";
-        std::getline(std::cin, password);
+        cout << "Enter admin username: ";
+        getline(cin, username);
+        cout << "Enter admin password: ";
+        getline(cin, password);
         
         if (login(username, password) && isAdminLoggedIn()) {
-            std::cout << "Admin login successful. Welcome, " << username << "!" << std::endl;
+            cout << "Admin login successful. Welcome, " << username << "!" << endl;
         } else {
-            std::cout << "Admin login failed. Invalid username or password." << std::endl;
+            cout << "Admin login failed. Invalid username or password." << endl;
             logout(); // In case a regular user tried to login as admin
         }
     }
     
     void handleBrowseByCategory() {
-        std::cout << "\n----- Browse by Category -----" << std::endl;
-        std::cout << "1. Movies" << std::endl;
-        std::cout << "2. TV Shows" << std::endl;
-        std::cout << "Enter your choice: ";
+        cout << "\n----- Browse by Category -----" << endl;
+        cout << "1. Movies" << endl;
+        cout << "2. TV Shows" << endl;
+        cout << "Enter your choice: ";
         
         int choice;
-        std::cin >> choice;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> choice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
-        std::vector<std::shared_ptr<Content>> results;
+        vector<shared_ptr<Content>> results;
         
         switch (choice) {
             case 1:
@@ -673,7 +674,7 @@ private:
                 results = getContentByType("TV Show");
                 break;
             default:
-                std::cout << "Invalid choice." << std::endl;
+                cout << "Invalid choice." << endl;
                 return;
         }
         
@@ -681,77 +682,77 @@ private:
     }
     
     void handleBrowseByGenre() {
-        std::vector<std::string> genres = getUniqueGenres();
+        vector<string> genres = getUniqueGenres();
         
-        std::cout << "\n----- Browse by Genre -----" << std::endl;
+        cout << "\n----- Browse by Genre -----" << endl;
         for (size_t i = 0; i < genres.size(); ++i) {
-            std::cout << (i + 1) << ". " << genres[i] << std::endl;
+            cout << (i + 1) << ". " << genres[i] << endl;
         }
         
-        std::cout << "Enter your choice (1-" << genres.size() << "): ";
+        cout << "Enter your choice (1-" << genres.size() << "): ";
         
         int choice;
-        std::cin >> choice;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> choice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (choice < 1 || choice > static_cast<int>(genres.size())) {
-            std::cout << "Invalid choice." << std::endl;
+            cout << "Invalid choice." << endl;
             return;
         }
         
-        std::vector<std::shared_ptr<Content>> results = findContentByGenre(genres[choice - 1]);
+        vector<shared_ptr<Content>> results = findContentByGenre(genres[choice - 1]);
         displayContentList(results);
     }
     
     void handleSearchByTitle() {
-        std::string title;
+        string title;
         
-        std::cout << "Enter title to search for: ";
-        std::getline(std::cin, title);
+        cout << "Enter title to search for: ";
+        getline(cin, title);
         
-        std::shared_ptr<Content> content = findContentByTitle(title);
+        shared_ptr<Content> content = findContentByTitle(title);
         
         if (content) {
             content->display();
         } else {
-            std::cout << "Content not found." << std::endl;
+            cout << "Content not found." << endl;
         }
     }
     
     void handleSearchByGenre() {
-        std::string genre;
+        string genre;
         
-        std::cout << "Enter genre to search for: ";
-        std::getline(std::cin, genre);
+        cout << "Enter genre to search for: ";
+        getline(cin, genre);
         
-        std::vector<std::shared_ptr<Content>> results = findContentByGenre(genre);
+        vector<shared_ptr<Content>> results = findContentByGenre(genre);
         
         if (results.empty()) {
-            std::cout << "No content found for genre: " << genre << std::endl;
+            cout << "No content found for genre: " << genre << endl;
         } else {
             displayContentList(results);
         }
     }
     
-    void displayContentList(const std::vector<std::shared_ptr<Content>>& content_list) {
+    void displayContentList(const vector<shared_ptr<Content>>& content_list) {
         if (content_list.empty()) {
-            std::cout << "No content available." << std::endl;
+            cout << "No content available." << endl;
             return;
         }
         
-        std::cout << "\n----- Content List -----" << std::endl;
+        cout << "\n----- Content List -----" << endl;
         int index = 1;
         for (const auto& content : content_list) {
-            std::cout << index++ << ". " << content->getTitle() 
+            cout << index++ << ". " << content->getTitle() 
                      << " (" << content->getType() << ", " << content->getGenre() << ")" 
                      << " - " << (content->isRented() || content->isPurchased() ? "Not Available" : "Available")
-                     << std::endl;
+                     << endl;
         }
         
-        std::cout << "\nEnter the number to view details (0 to cancel): ";
+        cout << "\nEnter the number to view details (0 to cancel): ";
         int choice;
-        std::cin >> choice;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> choice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (choice > 0 && choice <= static_cast<int>(content_list.size())) {
             content_list[choice - 1]->display();
@@ -759,69 +760,69 @@ private:
     }
     
     void handleRentContent() {
-        std::string title;
+        string title;
         
-        std::cout << "Enter the title of the content you want to rent: ";
-        std::getline(std::cin, title);
+        cout << "Enter the title of the content you want to rent: ";
+        getline(cin, title);
         
-        std::shared_ptr<Content> content = findContentByTitle(title);
+        shared_ptr<Content> content = findContentByTitle(title);
         
         if (!content) {
-            std::cout << "Content not found." << std::endl;
+            cout << "Content not found." << endl;
             return;
         }
         
         if (content->isRented() || content->isPurchased()) {
-            std::cout << "This content is not available for rent." << std::endl;
+            cout << "This content is not available for rent." << endl;
             return;
         }
         
-        std::cout << "Rent cost: $" << content->getRentCost() << std::endl;
-        std::cout << "Do you want to rent this content? (y/n): ";
+        cout << "Rent cost: $" << content->getRentCost() << endl;
+        cout << "Do you want to rent this content? (y/n): ";
         
         char response;
-        std::cin >> response;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> response;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (response == 'y' || response == 'Y') {
             if (current_user->rentContent(content)) {
-                std::cout << "Content rented successfully!" << std::endl;
+                cout << "Content rented successfully!" << endl;
             } else {
-                std::cout << "Failed to rent content." << std::endl;
+                cout << "Failed to rent content." << endl;
             }
         }
     }
     
     void handlePurchaseContent() {
-        std::string title;
+        string title;
         
-        std::cout << "Enter the title of the content you want to purchase: ";
-        std::getline(std::cin, title);
+        cout << "Enter the title of the content you want to purchase: ";
+        getline(cin, title);
         
-        std::shared_ptr<Content> content = findContentByTitle(title);
+        shared_ptr<Content> content = findContentByTitle(title);
         
         if (!content) {
-            std::cout << "Content not found." << std::endl;
+            cout << "Content not found." << endl;
             return;
         }
         
         if (content->isPurchased()) {
-            std::cout << "This content is not available for purchase." << std::endl;
+            cout << "This content is not available for purchase." << endl;
             return;
         }
         
-        std::cout << "Purchase cost: $" << content->getPurchaseCost() << std::endl;
-        std::cout << "Do you want to purchase this content? (y/n): ";
+        cout << "Purchase cost: $" << content->getPurchaseCost() << endl;
+        cout << "Do you want to purchase this content? (y/n): ";
         
         char response;
-        std::cin >> response;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> response;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (response == 'y' || response == 'Y') {
             if (current_user->purchaseContent(content)) {
-                std::cout << "Content purchased successfully!" << std::endl;
+                cout << "Content purchased successfully!" << endl;
             } else {
-                std::cout << "Failed to purchase content." << std::endl;
+                cout << "Failed to purchase content." << endl;
             }
         }
     }
@@ -833,183 +834,183 @@ private:
             return;
         }
         
-        std::string title;
-        std::cout << "Enter the title of the content you want to return: ";
-        std::getline(std::cin, title);
+        string title;
+        cout << "Enter the title of the content you want to return: ";
+        getline(cin, title);
         
-        std::shared_ptr<Content> content = findContentByTitle(title);
+        shared_ptr<Content> content = findContentByTitle(title);
         
         if (!content) {
-            std::cout << "Content not found." << std::endl;
+            cout << "Content not found." << endl;
             return;
         }
         
         if (current_user->returnContent(content)) {
-            std::cout << "Content returned successfully!" << std::endl;
+            cout << "Content returned successfully!" << endl;
         } else {
-            std::cout << "Failed to return content. Make sure you've rented it." << std::endl;
+            cout << "Failed to return content. Make sure you've rented it." << endl;
         }
     }
     
     void handleAddMovie() {
-        std::string title, genre;
+        string title, genre;
         double rating, rent_cost, purchase_cost;
         int duration;
         
-        std::cout << "Enter movie title: ";
-        std::getline(std::cin, title);
+        cout << "Enter movie title: ";
+        getline(cin, title);
         
         if (findContentByTitle(title)) {
-            std::cout << "A movie with this title already exists." << std::endl;
+            cout << "A movie with this title already exists." << endl;
             return;
         }
         
-        std::cout << "Enter genre: ";
-        std::getline(std::cin, genre);
+        cout << "Enter genre: ";
+        getline(cin, genre);
         
-        std::cout << "Enter rating (0-10): ";
-        std::cin >> rating;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter rating (0-10): ";
+        cin >> rating;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (rating < 0 || rating > 10) {
-            std::cout << "Invalid rating. Must be between 0 and 10." << std::endl;
+            cout << "Invalid rating. Must be between 0 and 10." << endl;
             return;
         }
         
-        std::cout << "Enter duration (in minutes): ";
-        std::cin >> duration;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter duration (in minutes): ";
+        cin >> duration;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (duration <= 0) {
-            std::cout << "Invalid duration." << std::endl;
+            cout << "Invalid duration." << endl;
             return;
         }
         
-        std::cout << "Enter rent cost: $";
-        std::cin >> rent_cost;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter rent cost: $";
+        cin >> rent_cost;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (rent_cost < 0) {
-            std::cout << "Invalid rent cost." << std::endl;
+            cout << "Invalid rent cost." << endl;
             return;
         }
         
-        std::cout << "Enter purchase cost: $";
-        std::cin >> purchase_cost;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter purchase cost: $";
+        cin >> purchase_cost;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (purchase_cost < 0) {
-            std::cout << "Invalid purchase cost." << std::endl;
+            cout << "Invalid purchase cost." << endl;
             return;
         }
         
-        addContent(std::make_shared<Movie>(title, genre, rating, duration, rent_cost, purchase_cost));
-        std::cout << "Movie added successfully!" << std::endl;
+        addContent(make_shared<Movie>(title, genre, rating, duration, rent_cost, purchase_cost));
+        cout << "Movie added successfully!" << endl;
     }
     
     void handleAddTVShow() {
-        std::string title, genre;
+        string title, genre;
         double rating, season_rent_cost, season_purchase_cost;
         int seasons, episodes_per_season;
         
-        std::cout << "Enter TV show title: ";
-        std::getline(std::cin, title);
+        cout << "Enter TV show title: ";
+        getline(cin, title);
         
         if (findContentByTitle(title)) {
-            std::cout << "A TV show with this title already exists." << std::endl;
+            cout << "A TV show with this title already exists." << endl;
             return;
         }
         
-        std::cout << "Enter genre: ";
-        std::getline(std::cin, genre);
+        cout << "Enter genre: ";
+        getline(cin, genre);
         
-        std::cout << "Enter rating (0-10): ";
-        std::cin >> rating;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter rating (0-10): ";
+        cin >> rating;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (rating < 0 || rating > 10) {
-            std::cout << "Invalid rating. Must be between 0 and 10." << std::endl;
+            cout << "Invalid rating. Must be between 0 and 10." << endl;
             return;
         }
         
-        std::cout << "Enter number of seasons: ";
-        std::cin >> seasons;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter number of seasons: ";
+        cin >> seasons;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (seasons <= 0) {
-            std::cout << "Invalid number of seasons." << std::endl;
+            cout << "Invalid number of seasons." << endl;
             return;
         }
         
-        std::cout << "Enter episodes per season: ";
-        std::cin >> episodes_per_season;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter episodes per season: ";
+        cin >> episodes_per_season;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (episodes_per_season <= 0) {
-            std::cout << "Invalid number of episodes." << std::endl;
+            cout << "Invalid number of episodes." << endl;
             return;
         }
         
-        std::cout << "Enter rent cost per season: $";
-        std::cin >> season_rent_cost;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter rent cost per season: $";
+        cin >> season_rent_cost;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (season_rent_cost < 0) {
-            std::cout << "Invalid rent cost." << std::endl;
+            cout << "Invalid rent cost." << endl;
             return;
         }
         
-        std::cout << "Enter purchase cost per season: $";
-        std::cin >> season_purchase_cost;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Enter purchase cost per season: $";
+        cin >> season_purchase_cost;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         if (season_purchase_cost < 0) {
-            std::cout << "Invalid purchase cost." << std::endl;
+            cout << "Invalid purchase cost." << endl;
             return;
         }
         
-        addContent(std::make_shared<TVShow>(title, genre, rating, seasons, episodes_per_season, 
+        addContent(make_shared<TVShow>(title, genre, rating, seasons, episodes_per_season, 
                                            season_rent_cost, season_purchase_cost));
-        std::cout << "TV show added successfully!" << std::endl;
+        cout << "TV show added successfully!" << endl;
     }
     
     void handleRemoveContent() {
         displayAllContent();
         
-        std::string title;
-        std::cout << "Enter the title of the content you want to remove: ";
-        std::getline(std::cin, title);
+        string title;
+        cout << "Enter the title of the content you want to remove: ";
+        getline(cin, title);
         
         if (removeContent(title)) {
-            std::cout << "Content removed successfully!" << std::endl;
+            cout << "Content removed successfully!" << endl;
         } else {
-            std::cout << "Failed to remove content. Title not found." << std::endl;
+            cout << "Failed to remove content. Title not found." << endl;
         }
     }
     
     void handleCheckUserCharges() {
-        std::string username;
-        std::cout << "Enter username: ";
-        std::getline(std::cin, username);
+        string username;
+        cout << "Enter username: ";
+        getline(cin, username);
         
-        std::shared_ptr<User> user = getUserByUsername(username);
+        shared_ptr<User> user = getUserByUsername(username);
         
         if (user) {
-            std::cout << "Charges due for user " << username << ": $" << user->getChargesDue() << std::endl;
+            cout << "Charges due for user " << username << ": $" << user->getChargesDue() << endl;
         } else {
-            std::cout << "User not found." << std::endl;
+            cout << "User not found." << endl;
         }
     }
     
     void handleAdminSearch() {
-        std::cout << "\n----- Search Content -----" << std::endl;
-        std::cout << "1. Search by title" << std::endl;
-        std::cout << "2. Search by genre" << std::endl;
-        std::cout << "Enter your choice: ";
+        cout << "\n----- Search Content -----" << endl;
+        cout << "1. Search by title" << endl;
+        cout << "2. Search by genre" << endl;
+        cout << "Enter your choice: ";
         
         int choice;
-        std::cin >> choice;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cin >> choice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
         switch (choice) {
             case 1:
@@ -1019,7 +1020,7 @@ private:
                 handleSearchByGenre();
                 break;
             default:
-                std::cout << "Invalid choice." << std::endl;
+                cout << "Invalid choice." << endl;
         }
     }
 };
